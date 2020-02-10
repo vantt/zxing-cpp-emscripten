@@ -8,7 +8,8 @@ var decodePtr = null;
 var Module = {
   onRuntimeInitialized: function () {
     ZXing = Module;
-    decodePtr = ZXing.addFunction(decodeCallback, 'viiiiffffffff');
+    decodePtr = ZXing.addFunction(decodeCallback, 'iiiiiffffffff');
+    //decodePtr = ZXing.addFunction(decodeCallback, 'viiiiffffffff');
     //console.log("Setup, decodePtr is " + decodePtr);
     //console.log(ZXing);
   }

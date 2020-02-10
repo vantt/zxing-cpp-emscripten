@@ -2,27 +2,36 @@
 
 The repository is based on [ZXing Emscripten build](https://github.com/kig/zxing-cpp-emscripten).
 
+This modified-build is customized specially for instascan-project and run on ubuntu.
+The build result was reconfigured to export as an *single-file*.
+
 ## Emscripten Installation
-1. Download [emsdk-portable-64bit.zip](https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable-64bit.zip)
+1. Download Emscript from GitHub
+	
+	```
+    git clone https://github.com/emscripten-core/emsdk.git
+    ```
+
 2. Fetch the latest registry of available tools:
   
     ```
-    emsdk update
+    cd emsdk
+	git pull
     ```
 3. Download and install the latest SDK tools:
 
     ```
-    emsdk install latest
+    ./emsdk install latest
     ```
 3. Make the "latest" SDK "active" for the current user:
 
     ```
-    emsdk activate latest
+    ./emsdk activate latest
     ```
 4.  Activate PATH and other environment variables in the current terminal:
 
     ```
-    emsdk_env
+    source emsdk_env.sh
     ```
 
 ## JavaScript ZXing
@@ -140,14 +149,15 @@ To build:
 To use:
 
 ``` javascript
-    <script>
-		var ZXing;
-		var Module = {
-			onRuntimeInitialized: function () {
-				ZXing = Module;
-				testZXing();
-			}
-		};
+    <script type="module">
+        import ZXingCreator  from "./zxing.js";
+    
+        var ZXing;
+    
+        ZXingCreator().then(function (mymod) {
+            ZXing = mymod;
+            testZXing();
+        });
 
 		function testZXing() {
 			var img = new Image;
@@ -172,7 +182,7 @@ To use:
 					var result = new Uint8Array(ZXing.HEAPU8.buffer, ptr, len);
 					window.resultString = String.fromCharCode.apply(null, result);
 				};
-				var decodePtr = ZXing.Runtime.addFunction(decodeCallback);
+				var decodePtr = ZXing.addFunction(decodeCallback,'iiiiiffffffff');
 
 				var image = ZXing._resize(width, height);
 
